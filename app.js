@@ -8,7 +8,8 @@ function saveTasks(tasks) {
 }
 function addTask(task) {
     const tasks = getTasks();
-    task.id = Date.now().toString();
+    // Using a simple random ID generator for better uniqueness than Date.now()
+    task.id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     task.createdAt = new Date().toISOString();
     tasks.push(task);
     saveTasks(tasks);
@@ -131,6 +132,7 @@ function setupDragAndDrop() {
                 if (taskIndex !== -1) {
                     tasks[taskIndex].status = newStatus;
                     saveTasks(tasks);
+                    renderKanbanBoard(); // Re-render the board to reflect changes
                 }
             }
         });
