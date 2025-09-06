@@ -123,6 +123,9 @@ header {
     max-width: 500px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
+.modal-content.edit-mode {
+    max-width: 800px;
+}
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -163,6 +166,7 @@ textarea.form-control {
     padding: 15px;
     min-width: 250px;
     flex: 1;
+    border: 1px solid #4a6cf7;
 }
 .column-header {
     display: flex;
@@ -211,6 +215,54 @@ textarea.form-control {
     background: #e6f7ff;
     border: 2px dashed #4a6cf7;
 }
+#comments-section {
+    margin-top: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+#comments-list {
+    margin-bottom: 20px;
+}
+
+.comment {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.comment:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 14px;
+}
+
+.comment-body {
+    color: #333;
+}
+
+.comment-actions button {
+    background: none;
+    border: none;
+    color: #4a6cf7;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+@media (min-width: 769px) {
+    .container {
+        max-width: 100%;
+    }
+}
+
 @media (max-width: 768px) {
     .kanban-board {
         flex-direction: column;

@@ -74,7 +74,12 @@ function renderKanbanBoard() {
                 <div class="kanban-tasks" data-status="${status}">
                     ${statusTasks.map(task => `
                         <div class="kanban-task" draggable="true" data-task-id="${task.id}">
-                            <h4>${task.title}</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <h4>${task.title}</h4>
+                                <button class="btn btn-secondary btn-sm" onclick="editTask('${task.id}')" style="padding: 2px 6px; font-size: 12px;">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
                             <div class="task-due">${task.dueDate || 'No due date'}</div>
                         </div>
                     `).join('')}
@@ -147,19 +152,26 @@ function closeModal() {
     document.getElementById('task-form').reset();
     document.getElementById('task-id').value = '';
     document.getElementById('modal-title').textContent = 'Add New Task';
+    document.getElementById('comments-section').style.display = 'none';
+    document.querySelector('.modal-content').classList.remove('edit-mode');
 }
 function editTask(id) {
     const tasks = getTasks();
     const task = tasks.find(t => t.id === id);
     if (task) {
+        document.querySelector('.modal-content').classList.add('edit-mode');
         document.getElementById('task-id').value = task.id;
         document.getElementById('title').value = task.title;
         document.getElementById('description').value = task.description || '';
         document.getElementById('due-date').value = task.dueDate || '';
         document.getElementById('time-estimate').value = task.timeEstimate || '';
         document.getElementById('status').value = task.status;
-        document.getElementById('comments').value = task.comments || '';
         document.getElementById('modal-title').textContent = 'Edit Task';
+        
+        const commentsSection = document.getElementById('comments-section');
+        commentsSection.style.display = 'block';
+        renderComments(id);
+
         openModal();
     }
 }
@@ -234,6 +246,53 @@ function setupCSVImport() {
         alert('CSV imported successfully!');
     }
 }
+function renderComments(taskId) {
+    const tasks = getTasks();
+    const task = tasks.find(t => t.id === taskId);
+    const commentsList = document.getElementById('comments-list');
+    if (task && task.comments && task.comments.length > 0) {
+        commentsList.innerHTML = task.comments.map((comment, index) => `
+            <div class="comment">
+                <div class="comment-header">
+                    <span>${new Date(comment.date).toLocaleString()}</span>
+                    <div class="comment-actions">
+                        <button onclick="editComment('${taskId}', ${index})">Edit</button>
+                    </div>
+                </div>
+                <div class="comment-body">${comment.text}</div>
+            </div>
+        `).join('');
+    } else {
+        commentsList.innerHTML = '<p>No comments yet.</p>';
+    }
+}
+
+function addComment(taskId, text) {
+    const tasks = getTasks();
+    const taskIndex = tasks.findIndex(t => t.id === taskId);
+    if (taskIndex !== -1) {
+        if (!tasks[taskIndex].comments) {
+            tasks[taskIndex].comments = [];
+        }
+        tasks[taskIndex].comments.push({ text: text, date: new Date() });
+        saveTasks(tasks);
+        renderComments(taskId);
+    }
+}
+
+function editComment(taskId, commentIndex) {
+    const tasks = getTasks();
+    const task = tasks.find(t => t.id === taskId);
+    const comment = task.comments[commentIndex];
+    
+    const newText = prompt("Edit your comment:", comment.text);
+    if (newText !== null && newText.trim() !== '') {
+        task.comments[commentIndex].text = newText;
+        task.comments[commentIndex].date = new Date();
+        saveTasks(tasks);
+        renderComments(taskId);
+    }
+}
 function initApp() {
     document.querySelectorAll('.nav-btn').forEach(button => {
         button.addEventListener('click', () => {
@@ -265,11 +324,13 @@ function initApp() {
             description: document.getElementById('description').value,
             dueDate: document.getElementById('due-date').value,
             timeEstimate: document.getElementById('time-estimate').value,
-            status: document.getElementById('status').value,
-            comments: document.getElementById('comments').value
+            status: document.getElementById('status').value
         };
         if (taskId) {
             task.id = taskId;
+            const tasks = getTasks();
+            const existingTask = tasks.find(t => t.id === taskId);
+            task.comments = existingTask.comments;
             updateTask(task);
         } else {
             addTask(task);
@@ -278,6 +339,15 @@ function initApp() {
         renderTaskList();
         renderKanbanBoard();
     });
+
+    document.getElementById('comment-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const taskId = document.getElementById('task-id').value;
+        const commentText = document.getElementById('new-comment').value;
+        addComment(taskId, commentText);
+        document.getElementById('new-comment').value = '';
+    });
+
     setupCSVImport();
 
     const activeView = localStorage.getItem('activeView') || 'task-list';
