@@ -63,6 +63,12 @@ function renderKanbanBoard() {
     const tasks = getTasks();
     const statuses = ['To Do', 'In Progress', 'Review', 'Done'];
     const container = document.getElementById('kanban-container');
+
+    const truncateText = (text, length) => {
+        if (!text || text.length <= length) return text || '';
+        return text.substring(0, length) + '...';
+    };
+
     container.innerHTML = statuses.map(status => {
         const statusTasks = tasks.filter(task => task.status === status);
         return `
@@ -74,13 +80,17 @@ function renderKanbanBoard() {
                 <div class="kanban-tasks" data-status="${status}">
                     ${statusTasks.map(task => `
                         <div class="kanban-task" draggable="true" data-task-id="${task.id}">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="kanban-task-header">
                                 <h4>${task.title}</h4>
-                                <button class="btn btn-secondary btn-sm" onclick="editTask('${task.id}')" style="padding: 2px 6px; font-size: 12px;">
+                                <button class="btn btn-secondary btn-sm" onclick="editTask('${task.id}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
                             </div>
-                            <div class="task-due">${task.dueDate || 'No due date'}</div>
+                            <p class="kanban-task-description">${truncateText(task.description, 50)}</p>
+                            <div class="kanban-task-footer">
+                                <span class="task-due"><i class="far fa-calendar"></i> ${task.dueDate || 'No due date'}</span>
+                                <span class="task-estimate"><i class="fas fa-clock"></i> ${task.timeEstimate ? task.timeEstimate + 'h' : 'N/A'}</span>
+                            </div>
                         </div>
                     `).join('')}
                 </div>
@@ -155,11 +165,20 @@ function closeModal() {
     document.getElementById('comments-section').style.display = 'none';
     document.querySelector('.modal-content').classList.remove('edit-mode');
 }
+
+function openUploadModal() {
+    document.getElementById('upload-modal').classList.add('active');
+}
+
+function closeUploadModal() {
+    document.getElementById('upload-modal').classList.remove('active');
+}
+
 function editTask(id) {
     const tasks = getTasks();
     const task = tasks.find(t => t.id === id);
     if (task) {
-        document.querySelector('.modal-content').classList.add('edit-mode');
+        document.querySelector('#task-modal .modal-content').classList.add('edit-mode');
         document.getElementById('task-id').value = task.id;
         document.getElementById('title').value = task.title;
         document.getElementById('description').value = task.description || '';
@@ -244,6 +263,7 @@ function setupCSVImport() {
         renderTaskList();
         renderKanbanBoard();
         alert('CSV imported successfully!');
+        closeUploadModal();
     }
 }
 function renderComments(taskId) {
@@ -327,6 +347,8 @@ function initApp() {
     document.getElementById('add-task-btn').addEventListener('click', openModal);
     document.querySelector('.close').addEventListener('click', closeModal);
     document.getElementById('close-modal').addEventListener('click', closeModal);
+    document.getElementById('upload-tasks-btn').addEventListener('click', openUploadModal);
+    document.getElementById('close-upload-modal').addEventListener('click', closeUploadModal);
     document.getElementById('task-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const taskId = document.getElementById('task-id').value;

@@ -19,18 +19,10 @@
         
         <main>
             <div id="task-list" class="page active">
-                <div class="import-section">
-                    <h3>Import Tasks from CSV</h3>
-                    <div id="drop-zone" style="border: 2px dashed #ccc; padding: 20px; margin: 15px 0; border-radius: 5px;">
-                        <p>Drag & drop CSV file here or</p>
-                        <input type="file" id="csv-file" accept=".csv" style="display: none;">
-                        <button class="btn btn-secondary" onclick="document.getElementById('csv-file').click()">
-                            <i class="fas fa-upload"></i> Select File
-                        </button>
-                    </div>
-                </div>
-                
                 <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                    <button class="btn btn-secondary" id="upload-tasks-btn" style="margin-right: 10px;">
+                        <i class="fas fa-upload"></i> Upload Tasks
+                    </button>
                     <button class="btn btn-primary" id="add-task-btn">
                         <i class="fas fa-plus"></i> Add Task
                     </button>
@@ -99,6 +91,25 @@
                         <button type="submit" class="btn btn-primary">Add Comment</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload CSV Modal -->
+    <div class="modal" id="upload-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Upload Tasks from CSV</h2>
+                <span class="close" id="close-upload-modal">&times;</span>
+            </div>
+            <div class="import-section">
+                <div id="drop-zone" style="border: 2px dashed #ccc; padding: 20px; margin: 15px 0; border-radius: 5px;">
+                    <p>Drag & drop CSV file here or</p>
+                    <input type="file" id="csv-file" accept=".csv" style="display: none;">
+                    <button class="btn btn-secondary" onclick="document.getElementById('csv-file').click()">
+                        <i class="fas fa-upload"></i> Select File
+                    </button>
+                </div>
             </div>
         </div>
     </div>
