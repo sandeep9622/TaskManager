@@ -293,11 +293,22 @@ function editComment(taskId, commentIndex) {
         renderComments(taskId);
     }
 }
+
+function updateLogoText(pageId) {
+    const logo = document.querySelector('.logo');
+    if (pageId === 'task-list') {
+        logo.textContent = 'Detailed View';
+    } else if (pageId === 'kanban-board') {
+        logo.textContent = 'Dashboard';
+    }
+}
+
 function initApp() {
     document.querySelectorAll('.nav-btn').forEach(button => {
         button.addEventListener('click', () => {
             const pageId = button.dataset.page;
             localStorage.setItem('activeView', pageId);
+            updateLogoText(pageId);
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -351,6 +362,7 @@ function initApp() {
     setupCSVImport();
 
     const activeView = localStorage.getItem('activeView') || 'task-list';
+    updateLogoText(activeView);
     document.querySelector(`.nav-btn[data-page="${activeView}"]`).click();
 }
 document.addEventListener('DOMContentLoaded', initApp);

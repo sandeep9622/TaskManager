@@ -32,18 +32,20 @@ header {
 }
 .nav-btn {
     padding: 10px 20px;
-    background: #4a6cf7;
-    color: white;
-    border: none;
+    background: transparent;
+    color: #4a6cf7;
+    border: 1px solid #4a6cf7;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.3s, color 0.3s;
 }
 .nav-btn:hover {
-    background: #3b5be3;
+    background: #4a6cf7;
+    color: white;
 }
 .nav-btn.active {
-    background: #2a4acb;
+    background: #4a6cf7;
+    color: white;
 }
 .page {
     display: none;
