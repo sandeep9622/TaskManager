@@ -82,7 +82,7 @@ function renderKanbanBoard() {
                     ${statusTasks.map(task => `
                         <div class="kanban-task" draggable="true" data-task-id="${task.id}">
                             <div class="kanban-task-header">
-                                <h4>${task.title}</h4>
+                                <h4 onclick="editTask('${task.id}')">${task.title}</h4>
                                 <button class="btn btn-secondary btn-sm" onclick="editTask('${task.id}')">
                                     <i class="fas fa-edit"></i>
                                 </button>

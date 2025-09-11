@@ -199,7 +199,7 @@ textarea.form-control {
     border-radius: 8px;
     margin-bottom: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    cursor: grab;
+    cursor: move;
     border-left: 5px solid #4a6cf7;
     transition: box-shadow 0.3s;
 }
@@ -207,7 +207,7 @@ textarea.form-control {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 .kanban-task:active {
-    cursor: grabbing;
+    cursor: move;
 }
 .kanban-task-header {
     display: flex;
@@ -218,6 +218,12 @@ textarea.form-control {
 .kanban-task-header h4 {
     margin: 0;
     font-size: 16px;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+.kanban-task-header h4:hover {
+    color: #4a6cf7;
+    text-decoration: underline;
 }
 .kanban-task-header .btn-sm {
     padding: 2px 6px;
